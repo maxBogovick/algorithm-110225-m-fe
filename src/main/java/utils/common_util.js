@@ -1,6 +1,10 @@
 export function logTestCase(description, actual, expected) {
-  const passed = actual === expected;
-  console.log(`${description} => ${passed ? '✅ Пройден' : `❌ Не пройден (Ожидалось: ${expected}, Получено: ${actual})`}`);
+  // Преобразуем массивы в строки для сравнения
+  const actualString = JSON.stringify(actual);
+  const expectedString = JSON.stringify(expected);
+
+  const passed = actualString === expectedString;
+  console.log(`${description} => ${passed ? '✅ Пройден' : `❌ Не пройден (Ожидалось: ${expectedString}, Получено: ${actualString})`}`);
 }
 
 export function logTestCaseWithException(description, func, expectedExceptionMessage) {

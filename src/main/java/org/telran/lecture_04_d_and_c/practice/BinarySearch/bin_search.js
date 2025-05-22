@@ -8,17 +8,23 @@
  * @param {number} right - правая граница (включительно)
  * @returns {number} индекс элемента или -1, если не найден
  */
-export function binarySearchRecursive(array, target, left, right) {
+export function binarySearchRecursive(array, target, leftIndex, rightIndex) {
     // Шаг 1: Проверить базовый случай: если left > right, элемент не найден — вернуть -1
-
-    // Шаг 2: Найти индекс середины массива: mid = Math.floor(left + (right - left) / 2)
+    if (leftIndex > rightIndex) {
+        return -1;
+    }
+    // Шаг 2: Найти индекс середины массива:
+    const midIndex = Math.floor(leftIndex + (rightIndex - leftIndex) / 2);
 
     // Шаг 3: Сравнить элемент в середине (array[mid]) с target:
     // - если равны, вернуть mid
-    // - если target < array[mid], рекурсивно искать в левой половине (left, mid - 1)
-    // - если target > array[mid], рекурсивно искать в правой половине (mid + 1, right)
-
-    return -1; // заглушка
+    if (array[midIndex] === target) {
+        return midIndex;
+    } else if (target < array[midIndex]) {
+        return binarySearchRecursive(array, target, leftIndex, midIndex -1);
+    } else if (target > array[midIndex]) {
+        return binarySearchRecursive(array, target, midIndex + 1, rightIndex);
+    }
 }
 
 /**
@@ -31,8 +37,11 @@ export function binarySearchRecursive(array, target, left, right) {
 export function binarySearch(array, target) {
     // Шаг 1: Проверить, что массив не пустой и не null
     // Шаг 2: Вызвать рекурсивный метод с начальными границами: 0 и array.length - 1
-
-    return -1; // заглушка
+    if (!array.length) {
+        throw new Error("Массив пуст");
+    }
+    //return -1; // заглушка
+    return binarySearchRecursive(array, target, 0, array.length - 1)
 }
 
 // --- Тестирование алгоритма ---

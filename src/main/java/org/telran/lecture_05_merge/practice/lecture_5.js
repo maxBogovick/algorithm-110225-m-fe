@@ -4,11 +4,19 @@
  * @returns {Array} - Массив, содержащий два подмассива [left, right].
  */
 export function splitArray(arr) {
+    if (!arr.length) {
+        return [];
+        //throw new Error("Массив пустой или неопределен");
+    }
     // Алгоритмические шаги:
     // 1. Вычислить средний индекс массива.
+    const midIndex = Math.floor(arr.length/2); // 5/2 => 2 
     // 2. Создать левую половину, срезав от начала до середины.
+    const leftArr = arr.slice(0, midIndex); //
     // 3. Создать правую половину, срезав от середины до конца.
+    const rightArr = arr.slice(midIndex, arr.length);
     // 4. Вернуть массив, содержащий обе половины.
+    return [leftArr, rightArr];
 }
 
 /**
@@ -16,26 +24,62 @@ export function splitArray(arr) {
  * @param {Array} arr - Входной массив для разделения.
  * @returns {Array} - Вложенная структура массива подмассивов.
  */
-export function recursiveSplit(arr) {
+export function recursiveSplit(arr) { // [1, 2, 3, 4, 5, 6, 7] // [1, 2, 3]
     // Алгоритмические шаги:
+   
+    if (!arr.length) {
+        return [];
+    }
     // 1. Если длина массива равна 1 или меньше, вернуть массив.
+    if (arr.length <= 1) {
+     return arr;
+    }
+   
     // 2. Вычислить средний индекс массива.
+    const midIndex = Math.floor(arr.length/2); // 4/2 => 2  step 1 mid = 2 
     // 3. Рекурсивно разделить левую половину (от начала до середины).
+    const leftArr = recursiveSplit(arr.slice(0, midIndex)); // [1,2,3] => [1] [2,3]
     // 4. Рекурсивно разделить правую половину (от середины до конца).
+    const rightArr = recursiveSplit(arr.slice(midIndex)); // [4, 5, 6, 7]
     // 5. Вернуть массив, содержащий результаты обоих рекурсивных разделений.
+    return [leftArr, rightArr];
 }
 
 /**
  * Объединяет два отсортированных массива в один отсортированный массив.
- * @param {Array} left - Левый отсортированный массив.
- * @param {Array} right - Правый отсортированный массив.
+ * @param {Array} left - Левый отсортированных массив.
+ * @param {Array} right - Правый отсортированных массив.
  * @returns {Array} - Новый отсортированный массив, содержащий все элементы из обоих входных массивов.
  */
 export function merge(left, right) {
     // Алгоритмические шаги:
     // 1. Инициализировать пустой результирующий массив.
+    const arr = [];
     // 2. Инициализировать индексы для левого и правого массивов, начиная с 0.
+    let i = 0;
+    let j = 0;
     // 3. Пока оба индекса находятся в пределах своих массивов:
+    while (i < left.length && j < right.length) {
+        if (left[i] < right[j]) {
+            arr.push(left[i]);
+            i++;
+        } else {
+            arr.push(right[j]);
+            j++;
+        }
+    }
+
+    while (i < left.length) {
+        arr.push(left[i]);
+        i++;
+    }
+
+    while (j < right.length) {
+        arr.push(right[j]);
+        j++;
+    }
+
+    return arr;
     //    a. Сравнить элементы на текущих индексах левого и правого массивов.
     //    b. Добавить меньший элемент в результирующий массив и увеличить соответствующий индекс.
     // 4. Добавить оставшиеся элементы из левого массива в результат.
@@ -50,13 +94,45 @@ export function merge(left, right) {
  */
 export function mergeSort(arr) {
     // Алгоритмические шаги:
+    if (!arr.length) {
+        //throw new Error("Массив пуст");
+        return [];
+    }
     // 1. Проверить, если длина массива равна 1 или меньше; если да, вернуть массив, так как он уже отсортирован.
-    // 2. Вычислить средний индекс массива.
-    // 3. Разделить массив на левую и правую половины.
-    // 4. Рекурсивно применить mergeSort к левой половине.
-    // 5. Рекурсивно применить mergeSort к правой половине.
-    // 6. Объединить отсортированные левую и правую половины.
-    // 7. Вернуть объединенный результат.
+    if (arr.length <=1) {
+        return arr;
+    }
+    const midIndex = Math.floor(arr.length/2);
+    const leftArray = mergeSort(arr.slice(0, midIndex));
+    const rightArray = mergeSort(arr.slice(midIndex, arr.length));
+
+    return mergeTwoArrays(leftArray, rightArray);
+}
+
+function mergeTwoArrays(arrayLeft, arrayRight) {
+    const result = [];
+    let indexLeft = 0;
+    let indexRight = 0;
+    while (indexLeft < arrayLeft.length && indexRight < arrayRight.length) {
+        if (arrayLeft[indexLeft] < arrayRight[indexRight]) {
+            result.push(arrayLeft[indexLeft]);
+            indexLeft++;
+        } else {
+            result.push(arrayRight[indexRight]);
+            indexRight++;
+        }
+    }
+
+    while(indexLeft < arrayLeft.length) {
+        result.push(arrayLeft[indexLeft]);
+        indexLeft++;
+    }
+
+    while (indexRight < arrayRight.length) {
+        result.push(arrayRight[indexRight]);
+        indexRight++;
+    }
+    return result;
 }
 
 /**
@@ -130,3 +206,11 @@ export function mergeAndFilter(array, filter, desc = false) {
     // 5. Вызвать функцию merge для сортировки отфильтрованного массива.
     // 6. Вернуть отсортированный массив.
 }
+
+//console.log(splitArray([1, 2, 3, 4]));
+//console.log(recursiveSplit([1, 2, 3, 4]));
+
+console.log(merge([1,2,3], [4,5,6]));
+console.log(merge([7,8,9], [4,5,6]));
+
+console.log("result  = " + mergeSort([3, 2, 5, 12, 8, 10]));

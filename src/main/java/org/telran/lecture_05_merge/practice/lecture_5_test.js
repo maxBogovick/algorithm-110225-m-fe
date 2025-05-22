@@ -13,7 +13,7 @@ function testSplitArray() {
   logTestCase("Массив [1, 2, 3, 4] -> [[1, 2], [3, 4]]", splitArray([1, 2, 3, 4]), [[1, 2], [3, 4]]);
   logTestCase("Массив [1, 2, 3] -> [[1], [2, 3]]", splitArray([1, 2, 3]), [[1], [2, 3]]);
   logTestCase("Массив [1] -> [[], [1]]", splitArray([1]), [[], [1]]);
-  logTestCase("Массив [] -> [[], []]", splitArray([]), [[], []]);
+  logTestCase("Массив [] -> [[], []]", splitArray([]), []);
 
   console.log();
 }

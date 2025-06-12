@@ -10,6 +10,15 @@
  * 4. Объединяется результат: sorted(less) + pivot + sorted(greater)
  */
 
+
+// [5, 3, 8, 2, 6, 1, 0] => 
+//    { less: [],
+//       pivot: number,
+//       greater: []
+//}
+
+const extractor = (product) => product.price;
+
 /**
  * Разделяет массив на элементы меньше и больше/равные опорному.
  *
@@ -17,9 +26,43 @@
  * @returns {{ pivot: any, less: Array, greater: Array }}
  * Объект с полями: опорный элемент, массивы меньше и больше/равные.
  */
-export function partition(arr) {
+// { name: 'Mouse', price: 25, category: 'Electronics' }
+export function partition(arr, extractor = n=>n) {
     // TODO: реализовать выбор pivot, проход по массиву и формирование less и greater
+    const less = [];
+    const greater = [];
+    const pivotIndex = Math.floor((arr.length - 1) / 2);
+
+    const pivot = extractor(arr[pivotIndex]); // pr {80, [pr1, pr2], [pr3, pr4]}
+
+    for (let i = 0; i < arr.length; i++) {
+        if (extractor(arr[i]) === pivot) {
+            continue;
+        }
+        if (extractor(arr[i]) < pivot) {
+            less.push(arr[i]);
+        } else {
+            greater.push(arr[i]);
+        }
+    }
+
+    const result = {
+        pivot: arr[pivotIndex],
+        less,
+        greater
+    };
+
+    
+
+    /**
+     * 
+     * {field1: 1233, field2: {id:1}}
+     */
+
+    return result;
 }
+
+console.log("Run partition = ", partition([1, 2, 3, 4, 5, 6, 7, 8]));
 
 /**
  * Выполняет сортировку массива с помощью базового QuickSort.
@@ -27,13 +70,26 @@ export function partition(arr) {
  * @param {Array} arr - Массив для сортировки.
  * @returns {Array} Отсортированный массив.
  */
-export function quickSort(arr) {
-    // TODO:
-    // - Если длина массива <= 1, вернуть его как есть.
-    // - Иначе выполнить partition.
-    // - Рекурсивно отсортировать less и greater.
-    // - Вернуть объединённый результат.
+export function quickSort(arr, fn = num => num) {
+
+    if (arr.length <= 1) {
+        return arr;
+    }
+
+    const resultOfPartition = partition(arr, fn); 
+
+    const pivot = resultOfPartition.pivot;
+    const less = quickSort(resultOfPartition.less, fn);
+    const greater = quickSort(resultOfPartition.greater, fn);
+    // less + pivot + greater
+    const result = less.concat(pivot, greater);  //[]
+
+    return result;
 }
+
+console.log("sort = ", quickSort([4, 6, 2, 8, 10, 3, 1]));
+
+
 
 
 /**
@@ -104,13 +160,13 @@ export function quickSelect(arr, k, low = 0, high = arr.length - 1, compareFn) {
 // ПРИМЕР: Нахождение топ-N самых популярных статей
 // =================================================================
 const articles = [
-  { title: "Статья A", views: 1500 },
-  { title: "Статья B", views: 900 },
-  { title: "Статья C", views: 4500 },
-  { title: "Статья D", views: 500 },
-  { title: "Статья E", views: 3100 },
-  { title: "Статья F", views: 1800 },
-  { title: "Статья G", views: 4000 },
+    { title: "Статья A", views: 1500 },
+    { title: "Статья B", views: 900 },
+    { title: "Статья C", views: 4500 },
+    { title: "Статья D", views: 500 },
+    { title: "Статья E", views: 3100 },
+    { title: "Статья F", views: 1800 },
+    { title: "Статья G", views: 4000 },
 ];
 
 /**
@@ -129,19 +185,19 @@ const articles = [
  * @returns {Array<Object>} Массив топ-N самых просматриваемых статей.
  */
 export function finderTopNArticles(articles, topN = 5) {
-  // 1. Скопировать массив, чтобы не изменять оригинал
+    // 1. Скопировать массив, чтобы не изменять оригинал
 
-  // 2. Определить функцию сравнения по просмотрам
+    // 2. Определить функцию сравнения по просмотрам
 
-  // 3. Если статей больше N:
-  //    3.1 Найти индекс (длину - N)
-  //    3.2 Получить пороговую статью через quickSelect
-  //    3.3 Определить пороговое значение просмотров
-  //    3.4 Отфильтровать статьи, у которых просмотры ≥ порога
-  //    3.5 Отсортировать результат и вернуть
+    // 3. Если статей больше N:
+    //    3.1 Найти индекс (длину - N)
+    //    3.2 Получить пороговую статью через quickSelect
+    //    3.3 Определить пороговое значение просмотров
+    //    3.4 Отфильтровать статьи, у которых просмотры ≥ порога
+    //    3.5 Отсортировать результат и вернуть
 
-  // 4. Если статей меньше или равно N:
-  //    4.1 Отсортировать весь массив по убыванию просмотров и вернуть
+    // 4. Если статей меньше или равно N:
+    //    4.1 Отсортировать весь массив по убыванию просмотров и вернуть
 }
 
 
@@ -159,6 +215,12 @@ const products = [
     { name: 'Webcam', price: 90, category: 'Electronics' },
     { name: 'Speaker', price: 200, category: 'Electronics' }
 ];
+
+
+
+
+//console.log("Result of partioon products = ", partition(products, extractor));
+console.log("Test quick sort algorithm = " +  JSON.stringify(quickSort(products, prod=>prod.price)));
 
 // =================================================================
 // ПРИМЕР: Нахождение топ-N самых больших файлов

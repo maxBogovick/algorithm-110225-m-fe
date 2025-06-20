@@ -8,7 +8,7 @@ class ArrayStack {
      * Инициализирует пустой массив для хранения элементов стека.
      */
     constructor() {
-        // TODO: Инициализировать пустой массив для хранения элементов стека
+        this.items = [];
     }
 
     /**
@@ -16,8 +16,7 @@ class ArrayStack {
      * @param {*} element - Элемент, который нужно добавить в стек.
      */
     push(element) {
-        // TODO: Добавить элемент в конец массива
-        // TODO: Вывести сообщение в консоль, что элемент добавлен, например: "Добавлено: <element>"
+        this.items.push(element);
     }
 
     /**
@@ -25,10 +24,10 @@ class ArrayStack {
      * @returns {*} Удаленный элемент или null, если стек пуст.
      */
     pop() {
-        // TODO: Проверить, пуст ли стек; если да, вывести в консоль "Стек пуст" и вернуть null
-        // TODO: Удалить и сохранить последний элемент массива
-        // TODO: Вывести сообщение в консоль, что элемент удален, например: "Удалено: <element>"
-        // TODO: Вернуть удаленный элемент
+        if (this.isEmpty()) {
+            return null;
+        }
+        return this.items.pop();
     }
 
     /**
@@ -36,8 +35,10 @@ class ArrayStack {
      * @returns {*} Верхний элемент стека или null, если стек пуст.
      */
     peek() {
-        // TODO: Проверить, пуст ли стек; если да, вернуть null
-        // TODO: Вернуть последний элемент массива без его удаления
+        if (this.items.isEmpty()) {
+            return null;
+        }
+        return this.items[this.items.length - 1];
     }
 
     /**
@@ -46,6 +47,7 @@ class ArrayStack {
      */
     isEmpty() {
         // TODO: Вернуть true, если длина массива равна 0, иначе false
+        return this.items.length === 0;
     }
 
     /**
@@ -53,26 +55,28 @@ class ArrayStack {
      * @returns {number} Количество элементов в стеке.
      */
     size() {
-        // TODO: Вернуть длину массива
+        return this.items.length;
     }
 
     /**
      * Очищает стек, удаляя все элементы.
      */
     clear() {
-        // TODO: Очистить массив, установив его в пустой массив
-        // TODO: Вывести сообщение в консоль: "Стек очищен"
+        this.items = [];
     }
 
     /**
      * Выполняет указанную функцию для каждого элемента стека, начиная с вершины.
      * @param {function} callback - Функция, которая будет вызвана для каждого элемента. Принимает элемент и индекс (от вершины).
      */
-    forEach(callback) {
-        // TODO: Пройтись по массиву с конца (вершина) к началу (основание)
-        // TODO: Для каждого элемента вызвать callback, передав элемент и индекс (индекс должен начинаться с 0 для вершины)
+    forEach(callbackFn) {
+        for (let i = this.items.length -1; i >=0; i--) {
+            callbackFn(this.items[i], i);
+        }
     }
 }
+
+
 
 /**
  * Класс, представляющий текстовый редактор с поддержкой операций вставки текста, отмены (undo) и повтора (redo).
@@ -84,9 +88,9 @@ class TextEditor {
      * Инициализирует пустое содержимое и стеки для операций undo и redo.
      */
     constructor() {
-        // TODO: Инициализировать пустую строку для хранения содержимого (content)
-        // TODO: Инициализировать стек для операций отмены (undoStack) с использованием класса Stack
-        // TODO: Инициализировать стек для операций повтора (redoStack) с использованием класса Stack
+        this.content = "";
+        this.undoStack = new ArrayStack();
+        this.redoStack = new ArrayStack();
     }
 
     /**
@@ -94,9 +98,11 @@ class TextEditor {
      * @param {function} command - Функция, представляющая команду для выполнения (например, вставка текста).
      */
     executeCommand(command) {
-        // TODO: Сохранить текущее состояние (объект с полем content) в undoStack
-        // TODO: Очистить redoStack
-        // TODO: Выполнить переданную команду
+        this.undoStack.push({
+            content: this.content
+        });
+        this.redoStack.clear();
+        command();
     }
 
     /**
@@ -104,7 +110,9 @@ class TextEditor {
      * @param {string} text - Текст для вставки.
      */
     insertText(text) {
-        // TODO: Вызвать executeCommand, передав функцию, которая добавляет text к текущему содержимому (content)
+        this.executeCommand(() => {
+            this.content = this.content + text;
+        });
     }
 
     /**
@@ -112,11 +120,15 @@ class TextEditor {
      * @returns {boolean} True, если отмена успешна, иначе false (если стек undo пуст).
      */
     undo() {
-        // TODO: Проверить, пуст ли undoStack; если да, вернуть false
-        // TODO: Сохранить текущее состояние (объект с полем content) в redoStack
-        // TODO: Извлечь предыдущее состояние из undoStack
-        // TODO: Установить содержимое (content) равным содержимому извлеченного состояния
-        // TODO: Вернуть true
+        if (this.undoStack.isEmpty()) {
+            return false;
+        }
+        this.redoStack.push({
+            content: this.content
+        })
+        const previousState = this.undoStack.pop();
+        this.content = previousState.content;
+        return true;
     }
 
     /**
@@ -124,11 +136,15 @@ class TextEditor {
      * @returns {boolean} True, если повтор успешен, иначе false (если стек redo пуст).
      */
     redo() {
-        // TODO: Проверить, пуст ли redoStack; если да, вернуть false
-        // TODO: Сохранить текущее состояние (объект с полем content) в undoStack
-        // TODO: Извлечь следующее состояние из redoStack
-        // TODO: Установить содержимое (content) равным содержимому извлеченного состояния
-        // TODO: Вернуть true
+        if (this.redoStack.isEmpty()) {
+            return false;
+        }
+        this.undoStack.push({
+            content: this.content
+        });
+        const redoState = this.redoStack.pop();
+        this.content = redoState.content;
+        return true;
     }
 
     /**
@@ -136,6 +152,22 @@ class TextEditor {
      * @returns {string} Текущее содержимое редактора.
      */
     getContent() {
-        // TODO: Вернуть текущее содержимое (content)
+        return this.content;
     }
 }
+
+const textEditor = new TextEditor();
+
+textEditor.insertText("Hello");
+textEditor.insertText(" world");
+textEditor.insertText("!!!");
+
+console.log(textEditor.getContent());
+
+textEditor.undo();
+
+console.log("text after undo = " + textEditor.getContent());
+
+textEditor.redo();
+
+console.log("text after redo = " + textEditor.getContent());

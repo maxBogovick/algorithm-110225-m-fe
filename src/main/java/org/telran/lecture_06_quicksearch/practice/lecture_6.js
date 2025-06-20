@@ -100,8 +100,9 @@ console.log("sort = ", quickSort([4, 6, 2, 8, 10, 3, 1]));
  * @param {number} j - Индекс второго элемента.
  */
 export function swap(arr, i, j) {
-    // Обменяй значения arr[i] и arr[j] местами.
-    // Подсказка: можно использовать временную переменную.
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
 }
 
 /**
@@ -114,13 +115,26 @@ export function swap(arr, i, j) {
  * @returns {number} Индекс, разделяющий две части массива.
  */
 export function hoarePartition(arr, low, high, compareFn) {
-    // 1. Выбери опорный элемент (pivot), например, элемент в середине массива.
-    // 2. Установи два указателя: i — в начало (low), j — в конец (high).
-    // 3. Пока true:
-    //    - сдвигай i вправо, пока arr[i] < pivot (используя compareFn)
-    //    - сдвигай j влево, пока arr[j] > pivot
-    //    - если i >= j, верни j — это граница разбиения
-    //    - иначе, обменяй arr[i] и arr[j], затем увеличь i и уменьши j
+
+    const pivotIndex = Math.floor((low + high)/2 );
+    const pivot = arr[pivotIndex];
+    let i = low;
+    let j = high;
+
+    while (true) {
+        while (arr[i] < pivot ) {
+            i++;
+        }
+        while (arr[j] > pivot) {
+            j--;
+        }
+        if (i >=j) {
+            return j;
+        }
+        swap(arr, i, j);
+        i++;
+        j--;
+    }
 }
 
 /**
@@ -131,11 +145,18 @@ export function hoarePartition(arr, low, high, compareFn) {
  * @param {number} high - Правая граница.
  */
 export function quickSortHoare(arr, low, high) {
-    // TODO:
-    // - Проверить условие выхода (low < high)
-    // - Выполнить hoarePartition и получить pivot
-    // - Рекурсивно вызвать quickSortHoare для левой и правой части
+
+    if (low >= high) {
+        return arr[low];
+    }
+
+    const pivotIndex = hoarePartition(arr, low, high);
+
+    quickSort(arr, low, pivotIndex-1);
+    quickSort(arr. pivotIndex + 1, high);
 }
+
+
 
 /**
  * Быстро находит k-й наименьший элемент в массиве, используя QuickSelect.
@@ -220,7 +241,7 @@ const products = [
 
 
 //console.log("Result of partioon products = ", partition(products, extractor));
-console.log("Test quick sort algorithm = " +  JSON.stringify(quickSort(products, prod=>prod.price)));
+console.log("Test quick sort algorithm = ", quickSort(products, prod=>prod.price));
 
 // =================================================================
 // ПРИМЕР: Нахождение топ-N самых больших файлов

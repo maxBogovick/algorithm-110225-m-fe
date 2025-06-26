@@ -8,6 +8,7 @@ class ArrayQueue {
      * Инициализирует пустой массив для хранения элементов очереди.
      */
     constructor() {
+        this.items = [];
         // TODO: Инициализировать пустой массив для хранения элементов очереди
     }
 
@@ -16,19 +17,21 @@ class ArrayQueue {
      * @param {*} element - Элемент, который нужно добавить в очередь.
      */
     enqueue(element) {
-        // TODO: Добавить элемент в конец массива
-        // TODO: Вывести сообщение в консоль, что элемент добавлен, например: "Добавлен в очередь: <element>"
+        this.items.push(element);
     }
+
+
 
     /**
      * Удаляет и возвращает элемент из начала очереди.
      * @returns {*} Удаленный элемент из очереди или null, если очередь пуста.
      */
     dequeue() {
-        // TODO: Проверить, пуста ли очередь; если да, вывести в консоль "Очередь пуста! Невозможно выполнить dequeue()" и вернуть null
-        // TODO: Удалить и сохранить первый элемент массива (учтите, что array.shift() имеет сложность O(n))
-        // TODO: Вывести сообщение в консоль, что элемент удален, например: "Удален из очереди: <element>"
-        // TODO: Вернуть удаленный элемент
+        if (this.isEmpty()) {
+            return null;
+        }
+        const data = this.items.shift();
+        return data;
     }
 
     /**
@@ -36,8 +39,10 @@ class ArrayQueue {
      * @returns {*} Первый элемент очереди или null, если очередь пуста.
      */
     front() {
-        // TODO: Проверить, пуста ли очередь; если да, вернуть null
-        // TODO: Вернуть первый элемент массива без его удаления
+        if (this.isEmpty()) {
+            return null;
+        }
+        return this.items[0];
     }
 
     /**
@@ -45,8 +50,10 @@ class ArrayQueue {
      * @returns {*} Последний элемент очереди или null, если очередь пуста.
      */
     rear() {
-        // TODO: Проверить, пуста ли очередь; если да, вернуть null
-        // TODO: Вернуть последний элемент массива без его удаления
+        if (this.isEmpty()) {
+            return null;
+        }
+        return this.items[this.items.length - 1];
     }
 
     /**
@@ -54,7 +61,7 @@ class ArrayQueue {
      * @returns {boolean} True, если очередь пуста, иначе false.
      */
     isEmpty() {
-        // TODO: Вернуть true, если длина массива равна 0, иначе false
+        return this.items.length === 0;
     }
 
     /**
@@ -62,24 +69,14 @@ class ArrayQueue {
      * @returns {number} Количество элементов в очереди.
      */
     size() {
-        // TODO: Вернуть длину массива
+        return this.items.length;
     }
 
     /**
      * Очищает очередь, удаляя все элементы.
      */
     clear() {
-        // TODO: Очистить массив, установив его в пустой массив
-        // TODO: Вывести сообщение в консоль: "Очередь очищена"
-    }
-
-    /**
-     * Выводит содержимое очереди в консоль.
-     */
-    display() {
-        // TODO: Проверить, пуста ли очередь; если да, вывести в консоль "Очередь пуста" и завершить выполнение
-        // TODO: Вывести в консоль сообщение "Содержимое очереди (начало -> конец):"
-        // TODO: Вывести элементы массива, соединенные строкой " <- "
+        this.items = [];
     }
 
     /**
@@ -87,10 +84,23 @@ class ArrayQueue {
      * @param {function} callback - Функция, которая будет вызвана для каждого элемента. Принимает элемент, индекс и массив.
      */
     forEach(callback) {
-        // TODO: Пройтись по всем элементам массива
-        // TODO: Вызвать callback для каждого элемента, передав элемент, его индекс и массив
+        for (let i = 0; i < this.items.length; i++) {
+            callback(i, this.items[i]);
+        }
     }
 }
+
+/*const queue = new ArrayQueue();
+queue.enqueue("one");
+queue.enqueue("two");
+queue.enqueue("three");
+queue.enqueue("and");
+queue.forEach((data, index) => console.log(`Value = ${data} and index = ${index}`));
+
+console.log("first in queue = " + queue.rear());
+queue.forEach((data, index) => console.log(`Value = ${data} and index = ${index}`));
+*/
+
 
 /**
  * Класс, представляющий узел односвязного списка.
@@ -101,10 +111,26 @@ class Node {
      * @param {*} data - Данные, которые будет содержать узел.
      */
     constructor(data) {
-        // TODO: Установить данные узла (data)
-        // TODO: Установить указатель на следующий узел (next) как null
+        this.value = data;
+        this.next = null;
     }
 }
+/*
+const node1 = new Node(1);
+const node2 = new Node(" world");
+node1.next = node2;
+node2.next = new Node({id: 1, name: "firstName"});
+console.log(node1);
+
+function printNodes(node) {
+    while (node) {
+        console.log(node.data);
+        node = node.next;
+    }
+}*/
+
+//printNodes(node2);
+
 
 /**
  * Класс, представляющий структуру данных очередь, реализованную на основе односвязного списка.
@@ -113,13 +139,13 @@ class Node {
 class LinkedListQueue {
     /**
      * Создает экземпляр LinkedListQueue.
-     * @param {number} [maxSize=Infinity] - Максимально допустимый размер очереди.
+    
      */
-    constructor(maxSize = Infinity) {
-        // TODO: Инициализировать начало очереди (head) как null
-        // TODO: Инициализировать конец очереди (tail) как null
-        // TODO: Инициализировать текущий размер (size) как 0
-        // TODO: Установить максимальный размер очереди (maxSize) из параметра
+    constructor() {
+
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
     }
 
     /**
@@ -128,14 +154,17 @@ class LinkedListQueue {
      * @returns {boolean} True, если элемент успешно добавлен, иначе false (если очередь переполнена).
      */
     enqueue(data) {
-        // TODO: Проверить, достигнут ли максимальный размер очереди; если да, вывести в консоль "Очередь переполнена" и вернуть false
-        // TODO: Создать новый узел с переданным значением data (используйте класс Node)
-        // TODO: Если очередь не пуста (tail существует), установить next текущего tail на новый узел
-        // TODO: Если очередь пуста (head не существует), установить head на новый узел
-        // TODO: Установить tail на новый узел
-        // TODO: Увеличить размер очереди (size) на 1
-        // TODO: Вывести сообщение в консоль, что элемент добавлен, например: "Добавлен: <data>"
-        // TODO: Вернуть true
+        const node = new Node(data);
+
+        if (this.tail) {
+            this.tail.next = node;
+        } else {
+            this.head = node;
+        }
+
+        this.tail = node;
+        this.size++;
+        return true;
     }
 
     /**
@@ -143,13 +172,20 @@ class LinkedListQueue {
      * @returns {*} Удаленный элемент или null, если очередь пуста.
      */
     dequeue() {
-        // TODO: Проверить, пуста ли очередь; если да, вывести в консоль "Очередь пуста" и вернуть null
-        // TODO: Сохранить данные (data) из узла head
-        // TODO: Переместить head на следующий узел (head.next)
-        // TODO: Уменьшить размер очереди (size) на 1
-        // TODO: Если очередь стала пустой (size === 0), установить tail в null
-        // TODO: Вывести сообщение в консоль, что элемент удален, например: "Удален: <data>"
-        // TODO: Вернуть сохраненные данные
+
+        if (this.isEmpty()) {
+            return null;
+        }
+
+        const removedData = this.head.value;
+        this.head = this.head.next;
+        this.size--;
+
+        if (this.size === 0) {
+            this.tail = null;
+        }
+
+        return removedData;
     }
 
     /**
@@ -157,7 +193,8 @@ class LinkedListQueue {
      * @returns {boolean} True, если очередь пуста, иначе false.
      */
     isEmpty() {
-        // TODO: Вернуть true, если head равен null, иначе false
+        //return this.head === null;
+        return this.size === 0;
     }
 
     /**
@@ -165,17 +202,16 @@ class LinkedListQueue {
      * @returns {number} Количество элементов в очереди.
      */
     getSize() {
-        // TODO: Вернуть текущий размер очереди (size)
+        return this.size;
     }
 
     /**
      * Очищает очередь, удаляя все элементы.
      */
     clear() {
-        // TODO: Установить head в null
-        // TODO: Установить tail в null
-        // TODO: Установить size в 0
-        // TODO: Вывести сообщение в консоль: "Очередь очищена"
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
     }
 
     /**
@@ -183,12 +219,26 @@ class LinkedListQueue {
      * @param {function} callback - Функция, которая будет вызвана для каждого элемента. Принимает данные элемента и индекс.
      */
     forEach(callback) {
-        // TODO: Начать с узла head
-        // TODO: Пройтись по всем узлам списка, пока текущий узел существует
-        // TODO: Для каждого узла вызвать callback, передав данные узла (data) и текущий индекс
-        // TODO: Перейти к следующему узлу и увеличить индекс
+        let currentNode = this.head;
+        let index = 0;
+        while (currentNode) {
+            callback(currentNode.value, index);
+            currentNode = currentNode.next;
+            index++;
+        }
     }
 }
+/*
+const queue = new LinkedListQueue();
+queue.enqueue("one");
+queue.enqueue("two");
+queue.enqueue("three");
+queue.enqueue("and");
+queue.forEach((data, index) => console.log(`Value = ${data} and index = ${index}`));
+
+console.log("Get and delete = ", queue.dequeue());
+queue.forEach((data, index) => console.log(`Value = ${data} and index = ${index}`));
+*/
 
 /**
  * Класс RateLimitedQueue - очередь с ограничением скорости выполнения запросов
@@ -207,96 +257,98 @@ class LinkedListQueue {
  * - Поддержка асинхронной работы через Promise
  */
 class RateLimitedQueue {
-  /**
-   * Создает новую очередь с ограничением скорости
-   * @param {number} rateLimitDelay - Задержка между запросами в миллисекундах
-   */
-  constructor(rateLimitDelay) {
-    // TODO: Инициализировать массив для хранения запросов (queue)
-    
-    // TODO: Инициализировать флаг isProcessing (boolean) для отслеживания состояния обработки
-    
-    // TODO: Сохранить rateLimitDelay как свойство класса
-  }
+    /**
+     * Создает новую очередь с ограничением скорости
+     * @param {number} rateLimitDelay - Задержка между запросами в миллисекундах
+     */
+    constructor(rateLimitDelay) {
+        this.queue = new LinkedListQueue();
+        this.isProcessing = false;
+        this.delay = rateLimitDelay;
+    }
 
-  /**
-   * Добавляет запрос в очередь
-   * 
-   * Алгоритм:
-   * 1. Добавить запрос в конец очереди
-   * 2. Если очередь не обрабатывается, запустить обработку
-   * 
-   * @param {Object} request - Объект запроса содержащий url, options, resolve, reject
-   */
-  enqueue(request) {
-    // TODO: Добавить request в конец массива queue
-    
-    // TODO: Проверить, не обрабатывается ли очередь в данный момент
-    // TODO: Если isProcessing === false, вызвать метод processQueue()
-  }
+    /**
+     * Добавляет запрос в очередь
+     * 
+     * Алгоритм:
+     * 1. Добавить запрос в конец очереди
+     * 2. Если очередь не обрабатывается, запустить обработку
+     *  {url, options, resolve, reject}
+     * @param {Object} request - Объект запроса содержащий url, options, resolve, reject
+     */
+    enqueue(request) {
+        this.queue.enqueue(request);
+        if (!this.isProcessing) {
+            this.processQueue();
+        }
+        // TODO: Добавить request в конец массива queue
 
-  /**
-   * Обрабатывает очередь запросов последовательно с задержкой
-   * 
-   * Алгоритм:
-   * 1. Проверить, есть ли запросы в очереди
-   * 2. Если очередь пуста, остановить обработку
-   * 3. Установить флаг обработки
-   * 4. Извлечь первый запрос из очереди
-   * 5. Выполнить HTTP-запрос
-   * 6. Обработать результат (успех/ошибка)
-   * 7. Установить таймер для следующего запроса
-   * 
-   * @async
-   * @returns {Promise<void>}
-   */
-  async processQueue() {
-    // TODO: Проверить, есть ли элементы в очереди
-    // TODO: Если очередь пуста:
-    //   - Установить isProcessing в false
-    //   - Выйти из функции (return)
-    
-    // TODO: Установить isProcessing в true
-    
-    // TODO: Извлечь первый элемент из очереди 
-    
-    // TODO: Обернуть выполнение запроса в try-catch блок:
-    //   try {
-    //     - Выполнить fetch с request.url и request.options
-    //     - Преобразовать ответ в JSON
-    //     - Вызвать request.resolve(data) для успешного результата
-    //   } catch (error) {
-    //     - Вызвать request.reject(error) для обработки ошибки
-    //   }
-    
-    // TODO: Установить таймер с задержкой rateLimitDelay для вызова processQueue()
-    // Использовать setTimeout(() => this.processQueue(), this.rateLimitDelay)
-  }
+        // TODO: Проверить, не обрабатывается ли очередь в данный момент
+        // TODO: Если isProcessing === false, вызвать метод processQueue()
+    }
 
-  /**
-   * Отправляет HTTP-запрос через очередь с ограничением скорости
-   * 
-   * Алгоритм:
-   * 1. Создать новый Promise
-   * 2. В конструкторе Promise создать объект запроса с url, options, resolve, reject
-   * 3. Добавить запрос в очередь через enqueue()
-   * 4. Вернуть Promise
-   * 
-   * @param {string} url - URL для запроса
-   * @param {Object} options - Опции для fetch (method, headers, body и т.д.)
-   * @returns {Promise} Promise, который разрешается с данными ответа
-   */
-  async sendRequest(url, options) {
-    // TODO: Вернуть новый Promise, который:
-    //   - Принимает resolve и reject как параметры
-    //   - Создает объект запроса: { url, options, resolve, reject }
-    //   - Вызывает this.enqueue() с этим объектом
-  }
+    /**
+     * Обрабатывает очередь запросов последовательно с задержкой
+     * 
+     * Алгоритм:
+     * 1. Проверить, есть ли запросы в очереди
+     * 2. Если очередь пуста, остановить обработку
+     * 3. Установить флаг обработки
+     * 4. Извлечь первый запрос из очереди
+     * 5. Выполнить HTTP-запрос
+     * 6. Обработать результат (успех/ошибка)
+     * 7. Установить таймер для следующего запроса
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
+    async processQueue() {
+        if (this.queue.isEmpty()) {
+            this.isProcessing = false;
+            return;
+        }
+
+        this.isProcessing = true;
+
+        const requestFromQueue = this.queue.dequeue();
+
+        try {
+            const response = await fetch(requestFromQueue.url, requestFromQueue.options);
+            const data = await response.json();
+            requestFromQueue.resolve(data);
+        } catch (error) {
+            requestFromQueue.reject(error);
+        }
+        setTimeout(() => this.processQueue(), this.delay);
+    }
+
+    /**
+     * Отправляет HTTP-запрос через очередь с ограничением скорости
+     * 
+     * Алгоритм:
+     * 1. Создать новый Promise
+     * 2. В конструкторе Promise создать объект запроса с url, options, resolve, reject
+     * 3. Добавить запрос в очередь через enqueue()
+     * 4. Вернуть Promise
+     * 
+     * @param {string} url - URL для запроса
+     * @param {Object} options - Опции для fetch (method, headers, body и т.д.)
+     * @returns {Promise} Promise, который разрешается с данными ответа
+     */
+    async sendRequest(url, options) {
+        return new Promise((resolve, reject) => {
+            this.enqueue({ url, options, resolve, reject });
+        })
+        // TODO: Вернуть новый Promise, который:
+        //   - Принимает resolve и reject как параметры
+        //   - Создает объект запроса: { url, options, resolve, reject }
+        //   - Вызывает this.enqueue() с этим объектом
+    }
 }
 
 // Пример использования (для демонстрации студентам):
-/*
-const queue = new RateLimitedQueue(1000); // 1 запрос в секунду
+
+const queue = new RateLimitedQueue(5000); // 1 запрос в секунду
 
 // Добавляем несколько запросов
 queue.sendRequest('https://dummyjson.com/test', { method: 'GET' })
@@ -311,10 +363,6 @@ queue.sendRequest('https://api.example.com/data3', { method: 'GET' })
   .then(data => console.log('Ответ 3:', data))
   .catch(error => console.error('Ошибка 3:', error));
 
-// Проверка состояния очереди
-console.log('Запросов в очереди:', queue.getQueueLength());
-console.log('Обрабатывается:', queue.isProcessingQueue());
-*/
 
 /**
  * Класс, представляющий систему загрузки файлов с использованием очереди на основе связного списка.

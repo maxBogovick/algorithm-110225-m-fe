@@ -191,6 +191,132 @@ class LinkedListQueue {
 }
 
 /**
+ * Класс RateLimitedQueue - очередь с ограничением скорости выполнения запросов
+ * 
+ * Эта структура данных позволяет контролировать частоту выполнения HTTP-запросов,
+ * что особенно важно при работе с API, имеющими ограничения на количество запросов в единицу времени.
+ * 
+ * Принцип работы:
+ * - Все запросы добавляются в очередь
+ * - Запросы выполняются последовательно с заданной задержкой
+ * - Каждый запрос возвращает Promise, который разрешается при получении ответа
+ * 
+ * Основные преимущества:
+ * - Предотвращение превышения лимитов API
+ * - Автоматическая обработка очереди запросов
+ * - Поддержка асинхронной работы через Promise
+ */
+class RateLimitedQueue {
+  /**
+   * Создает новую очередь с ограничением скорости
+   * @param {number} rateLimitDelay - Задержка между запросами в миллисекундах
+   */
+  constructor(rateLimitDelay) {
+    // TODO: Инициализировать массив для хранения запросов (queue)
+    
+    // TODO: Инициализировать флаг isProcessing (boolean) для отслеживания состояния обработки
+    
+    // TODO: Сохранить rateLimitDelay как свойство класса
+  }
+
+  /**
+   * Добавляет запрос в очередь
+   * 
+   * Алгоритм:
+   * 1. Добавить запрос в конец очереди
+   * 2. Если очередь не обрабатывается, запустить обработку
+   * 
+   * @param {Object} request - Объект запроса содержащий url, options, resolve, reject
+   */
+  enqueue(request) {
+    // TODO: Добавить request в конец массива queue
+    
+    // TODO: Проверить, не обрабатывается ли очередь в данный момент
+    // TODO: Если isProcessing === false, вызвать метод processQueue()
+  }
+
+  /**
+   * Обрабатывает очередь запросов последовательно с задержкой
+   * 
+   * Алгоритм:
+   * 1. Проверить, есть ли запросы в очереди
+   * 2. Если очередь пуста, остановить обработку
+   * 3. Установить флаг обработки
+   * 4. Извлечь первый запрос из очереди
+   * 5. Выполнить HTTP-запрос
+   * 6. Обработать результат (успех/ошибка)
+   * 7. Установить таймер для следующего запроса
+   * 
+   * @async
+   * @returns {Promise<void>}
+   */
+  async processQueue() {
+    // TODO: Проверить, есть ли элементы в очереди
+    // TODO: Если очередь пуста:
+    //   - Установить isProcessing в false
+    //   - Выйти из функции (return)
+    
+    // TODO: Установить isProcessing в true
+    
+    // TODO: Извлечь первый элемент из очереди 
+    
+    // TODO: Обернуть выполнение запроса в try-catch блок:
+    //   try {
+    //     - Выполнить fetch с request.url и request.options
+    //     - Преобразовать ответ в JSON
+    //     - Вызвать request.resolve(data) для успешного результата
+    //   } catch (error) {
+    //     - Вызвать request.reject(error) для обработки ошибки
+    //   }
+    
+    // TODO: Установить таймер с задержкой rateLimitDelay для вызова processQueue()
+    // Использовать setTimeout(() => this.processQueue(), this.rateLimitDelay)
+  }
+
+  /**
+   * Отправляет HTTP-запрос через очередь с ограничением скорости
+   * 
+   * Алгоритм:
+   * 1. Создать новый Promise
+   * 2. В конструкторе Promise создать объект запроса с url, options, resolve, reject
+   * 3. Добавить запрос в очередь через enqueue()
+   * 4. Вернуть Promise
+   * 
+   * @param {string} url - URL для запроса
+   * @param {Object} options - Опции для fetch (method, headers, body и т.д.)
+   * @returns {Promise} Promise, который разрешается с данными ответа
+   */
+  async sendRequest(url, options) {
+    // TODO: Вернуть новый Promise, который:
+    //   - Принимает resolve и reject как параметры
+    //   - Создает объект запроса: { url, options, resolve, reject }
+    //   - Вызывает this.enqueue() с этим объектом
+  }
+}
+
+// Пример использования (для демонстрации студентам):
+/*
+const queue = new RateLimitedQueue(1000); // 1 запрос в секунду
+
+// Добавляем несколько запросов
+queue.sendRequest('https://dummyjson.com/test', { method: 'GET' })
+  .then(data => console.log('Ответ 1:', data))
+  .catch(error => console.error('Ошибка 1:', error));
+
+queue.sendRequest('https://dummyjson.com/ip', { method: 'GET' })
+  .then(data => console.log('Ответ 2:', data))
+  .catch(error => console.error('Ошибка 2:', error));
+
+queue.sendRequest('https://api.example.com/data3', { method: 'GET' })
+  .then(data => console.log('Ответ 3:', data))
+  .catch(error => console.error('Ошибка 3:', error));
+
+// Проверка состояния очереди
+console.log('Запросов в очереди:', queue.getQueueLength());
+console.log('Обрабатывается:', queue.isProcessingQueue());
+*/
+
+/**
  * Класс, представляющий систему загрузки файлов с использованием очереди на основе связного списка.
  * Управляет добавлением файлов в очередь, подключением к серверу и обработкой очереди с повторными попытками.
  */

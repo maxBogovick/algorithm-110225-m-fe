@@ -172,10 +172,9 @@ class Step {
      */
     constructor(title, validator) {
         // Сохраните заголовок шага
-
-        // Сохраните функцию валидации
-
-        // Создайте объект для хранения введённых данных
+        this.title = title;
+        this.validator = validator;
+        this.payload = {};
     }
 }
 
@@ -189,11 +188,8 @@ class RegistrationWizard {
      * @param {{ title: string, validator: (data: Object) => boolean }[]} [steps] - Начальные шаги.
      */
     constructor(steps = []) {
-        // Создайте двусвязный список для хранения шагов
-
-        // Добавьте переданные шаги (используйте this.addStep)
-
-        // Установите текущий узел на первый шаг, если он есть
+        this.steps = new DoubleLinkedList();
+        this.currentStep = this.steps.head;
     }
 
     /**
@@ -202,11 +198,15 @@ class RegistrationWizard {
      * @param {(data: Object) => boolean} validator - Функция проверки данных.
      */
     addStep(title, validator) {
-        // Создайте экземпляр Step
+        const step = new Step(title, validator);
 
-        // Добавьте его в конец двусвязного списка
-
-        // Если это первый шаг, установите его текущим
+        // stack.push(data)
+        // queue.enqueue(data)
+        // doubleLinedList.append(data)
+        this.steps.append(step);
+        if (!this.currentStep) {
+            this.currentStep = this.steps.head;
+        }
     }
 
     /**
@@ -214,6 +214,13 @@ class RegistrationWizard {
      * @returns {Step | null} Текущий шаг или null, если шагов нет.
      */
     get current() {
+        /*if(this.currentStep) {
+            return this.currentStep.value;
+        } else {
+            return null;
+        }
+        */
+        return this.currentStep?.value ?? null;
         // Верните значение текущего узла, если он существует
     }
 
@@ -222,12 +229,11 @@ class RegistrationWizard {
      * @param {Object} data - Объект с данными шага.
      */
     fill(data) {
-        // Если текущего шага нет, просто выйдите из метода
-
-        // Сохраните данные в payload текущего шага
-
-        // Выведите сообщение в консоль о сохранении данных
-        // console.log(`Данные сохранены для шага "${this.current.title}"`);
+        if (!this.current) {
+            return ;
+        }
+        //this,current  = step
+        this.current.payload = data;
     }
 
     /**
@@ -235,24 +241,27 @@ class RegistrationWizard {
      * @returns {boolean} true, если данные корректны; иначе false.
      */
     validate() {
-        // Если текущего шага нет, вернуть false
-
-        // Выполните валидацию, передав валидацию payload
-
-        // Выведите результат проверки в консоль
-        // Верните результат проверки
+        if (!this.current) {
+            return false;
+        }
+        const step = this.current;
+        const isValid = step.validator(step.payload);
+        return isValid;
     }
 
     /**
      * Перейти к следующему шагу.
      */
     next() {
-        // Если валидация не прошла, выведите сообщение и выйдите
-        //   console.log('Пожалуйста, исправьте ошибки.');
-
-        // Если есть следующий узел, переходите к нему и выведите сообщение
-        // console.log(`Перешли к шагу "${this.current.title}"`);
-        // иначе console.log('Это последний шаг.');
+        if (!this.validate()) {
+            console.log("На текущем шаге есть невалидные данные, исправьте их пожалуйста");
+            return;
+        }
+        if (this.currentStep?.next) {
+            this.currentStep = this.currentStep.next;
+        } else {
+            console.log("Это последний шаг");
+        }
     }
 
     /**
@@ -281,6 +290,35 @@ class RegistrationWizard {
     }
 }
 
+
+const wiz = new RegistrationWizard();
+
+/*{
+    name: "user1Name",
+    email: "useremeil@mail.com",
+    pasword: "1234456"
+}
+    */
+
+wiz.addStep("Имя пользователя", d => d.name?.length >= 3);
+wiz.addStep("Email", d => /@/.test(d.email));
+wiz.addStep("Пароль", d => d.password?.length >= 6);
+
+// step 1
+console.log("before fill = ", wiz.current);
+wiz.fill({ name: 'Вася' });
+console.log("after fill = ", wiz.current);
+wiz.next();
+
+// step2
+wiz.fill({ email: 'vasya@mail.com' });
+console.log("after next = ", wiz.current);
+wiz.next();
+
+wiz.fill({ password: '12345' });
+console.log("after next 2 = ", wiz.current);
+wiz.next();
+console.log("last step = ", wiz.current);
 /**
  * ======= Пример использования =======
  * Создайте экземпляр RegistrationWizard
